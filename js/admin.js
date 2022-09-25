@@ -11,9 +11,9 @@ console.log(`desde admin.js`);
  let inputUrl = document.getElementById(`inputUrl`);
  let form=document.getElementById(`form`)
  console.log(form);
- /* creamos un array para almacernar los datos de los nuevos productos*/
+ /* creamos un array para almacernar los datos de los nuevos productos, ademas incorporo consulta en JSON para ver que tengo almacenado en LocalStorage*/
 
- let arrayProducto = [];
+ let arrayProducto = JSON.parse(localStorage.getItem(`Listado de Productos`))||[];
 
  /*creamos un evento para el boton guadar*/
 
