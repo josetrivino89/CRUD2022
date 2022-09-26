@@ -30,9 +30,31 @@ console.log(`desde admin.js`);
    console.log(arrayProducto);
    //*mando los datos a local storage usando metoso stringify
    localStorage.setItem(`Listado de Productos`,JSON.stringify(arrayProducto))
+   window.location.reload()
    //*reseteo formulario para que puedan completar siguiente producto
    form.reset()
 
  }
 /*creamos un evento para que el formulario escuche*/
  form.addEventListener(`submit`,handleSubmit);
+
+ //*Traigo el tbody del html:
+
+ let tBodyListaProducto = document.getElementById("bodyListaProductosAdmin")
+ console.log(tBodyListaProducto);
+ //*recorro el arrayProducto para ir agregando los nuevos productos:
+ arrayProducto.forEach(producto => {
+    tBodyListaProducto.innerHTML +=
+    `<tr>
+        <th class="text-center">${producto.codigo}</th>
+        <th class="text-center">${producto.producto}</th>
+        <th class="text-center">${producto.descripcion}</th>
+        <th class="text-center">u$s:${producto.precio}</th>
+        <th class="text-center">${producto.URL}</th>
+        <th class="text-center">
+            <button class="btn btn-primary text-center">Borrar</button>
+            <button class="btn btn-danger text-center">Editar</button>
+            
+        </th>
+    </tr>`
+ });
