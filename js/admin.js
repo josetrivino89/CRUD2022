@@ -31,6 +31,20 @@ console.log(`desde admin.js`);
  const handleSubmit=(e)=>{
     //*evita actualizr pagina
     e.preventDefault();
+    //*creamos unas validaciones para los inputs desde javascript:
+    //* usamos expresiones regulares para validad URL
+    const regex= /^(ftp|http|https):\/\/[^ "]+$/;
+    const validadUrl = regex.test(inputUrl.value)
+    if (inputCodigo.value === ""|| inputProducto.value==="" || inputPrecio.value ==="" ||inputDescripcion.value===""|| inputUrl.value==="" )
+     { alert(`Por favor completar todo los campos para guardar el producto`);
+     //*hacemos un return para que corte la ejecucion
+     return        
+    }
+
+    if (!validadUrl) {
+        alert(`La URL ingresada no es valida`);
+        return;
+    }
     //*crea un nuevo producto a partir de los inputs del usuario
    const nuevoProducto = new Producto(inputCodigo.value , inputProducto.value , inputPrecio.value , inputDescripcion.value, inputUrl.value);
    //*hago console para verque tengo
@@ -65,7 +79,7 @@ console.log(`desde admin.js`);
         <th class="text-center">${producto.URL}</th>
         <th class="text-center">
             <button class="btn btn-primary text-center" onclick="borrarProducto(${producto.codigo})">Borrar</button>
-            <button class="btn btn-danger text-center">Editar</button>
+            <button class="btn btn-danger text-center" onclick="editarProducto(${producto.codigo})">Editar</button>
             
         </th>
     </tr>`
@@ -77,7 +91,7 @@ console.log(`desde admin.js`);
     console.log(codigo);
     //*para borrar un producto debo filtar el array y devolverlo sin el producto, para ello necesito el codigo para vincularlo, para eso usamos el metodo filter:
     const arrayFiltrado = arrayProducto.filter(producto =>{
-        //*utilizamos el metodo toString ya que el array esta en formato string , el metodo tostring transforma un numero en string y lo vuelve comparable:
+        //*utilizamos el metodo toString ya que el array esta en formato string , el metodo tostring transforma un numero en string y lo vuelve comparable, luego le pido a la funcion que me traiga todo los productos salvo el que tenga el codigo:
         return producto.codigo !== codigo.toString()
     })
     console.log(arrayFiltrado);
@@ -85,7 +99,37 @@ console.log(`desde admin.js`);
     arrayProducto = arrayFiltrado;
     //* ahora necesito enviar el nuevo array a JSON:*//
     localStorage.setItem(`Listado de Productos`,JSON.stringify(arrayProducto))
-    //*actualizo la pagina para cargar los cambios
+    //*actualizo la pagina para cargar los cambios*//
     window.location.reload()
+
+ }
+
+ //*editar productos*//
+ const editarProducto = (codigo) => {
+    console.log(codigo);
+    //*necesitamos buscar el producto en el array,para ello usamos el metodo find
+    const productoEditado = arrayProducto.find(producto => {
+        return producto.codigo === codigo.toString();
+        
+    });
+    console.log(productoEditado)
+    //* para editar en el formulario tengo que pasarle al formulario los datos, para eso debo igualr los inputs.value a cada parametro que se le paso al objeto*//:
+     inputCodigo.value = productoEditado.codigo;
+     inputProducto.value = productoEditado.producto;
+     inputPrecio.value = productoEditado.precio;
+     inputDescripcion.value = productoEditado.descripcion;
+     inputUrl.value = productoEditado.URL;
+     //para que ahora quede guardado los cambios y no se incluya un producto mas, tengo que borrar el anteior:
+        const arrayFiltrado = arrayProducto.filter(producto =>{
+            //*utilizamos el metodo toString ya que el array esta en formato string , el metodo tostring transforma un numero en string y lo vuelve comparable, luego le pido a la funcion que me traiga todo los productos salvo el que tenga el codigo:
+            return producto.codigo !== codigo.toString()
+        })
+        console.log(arrayFiltrado);
+        //* ahora cambio mi arrayproducto por el nuevo arrayfiltrado, es decir lo reemplazo:*//
+        arrayProducto = arrayFiltrado;
+        //* ahora necesito enviar el nuevo array a JSON:*//
+        localStorage.setItem(`Listado de Productos`,JSON.stringify(arrayProducto))
+        // //*actualizo la pagina para cargar los cambios*//
+        // window.location.reload()
 
  }
